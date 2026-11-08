@@ -1,0 +1,8 @@
+{
+  "runtime": "typescript",
+  "platformVersion": 28,
+  "entry": "client/dist/index.html",
+  "name": "VM Terminal",
+  "slug": "vm-terminal",
+  "managedCronJobs": []
+}

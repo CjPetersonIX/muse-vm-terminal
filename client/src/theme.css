@@ -1,0 +1,426 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700&display=swap');
+@import "tailwindcss";
+@import "tailwindcss-safe-area";
+
+@theme {
+  --text-xs: 12px;
+  --text-xs--line-height: 16px;
+  --text-sm: 14px;
+  --text-sm--line-height: 20px;
+  --text-base: 16px;
+  --text-base--line-height: 24px;
+  --text-lg: 18px;
+  --text-lg--line-height: 28px;
+  --text-xl: 20px;
+  --text-xl--line-height: 28px;
+  --text-2xl: 24px;
+  --text-2xl--line-height: 32px;
+  --text-3xl: 30px;
+  --text-3xl--line-height: 36px;
+}
+
+/* Muse VM Terminal design tokens: deep blue-black base, liquid glass
+   surfaces, magenta accent, cyan "live" and amber secondaries. Dark in
+   both system modes. */
+:root {
+  color-scheme: dark;
+  --bg: #0b0d12;
+  --surface: rgba(255, 255, 255, 0.06);
+  --surface-strong: rgba(255, 255, 255, 0.1);
+  --text: #f2f3f7;
+  --dim: #9ba1b0;
+  --border: rgba(255, 255, 255, 0.12);
+  --accent: #e93d82;
+  --accent-soft: rgba(233, 61, 130, 0.18);
+  --cyan: #38e1c6;
+  --amber: #ffb224;
+  --radius: 16px;
+  --space-surface: var(--surface);
+  --space-surface-alt: var(--surface-strong);
+  --space-muted: var(--dim);
+  --space-border: var(--border);
+  --space-accent: var(--accent);
+  --term-red: #ff6b5e;
+  --term-pane: rgba(0, 0, 0, 0.42);
+  --chip-bg: rgba(255, 255, 255, 0.06);
+  --accent-deep: #9d2b5e;
+  --accent-fg: #ffffff;
+  --glow-1: #e93d82;
+  --glow-2: #38e1c6;
+  --glow-3: #7c5cff;
+  --glow-4: #4f8ff7;
+}
+
+html,
+body {
+  height: 100%;
+  overscroll-behavior: none;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: system-ui, -apple-system, "Segoe UI", sans-serif;
+}
+
+/* Liquid Glass — holographic dashboard glass. Each panel layers a
+   neutral specular gradient over a faint iridescent wash (magenta →
+   cyan → violet, echoing the ambient glow field behind it), with a
+   bright top edge highlight, a soft colored outer halo, and a deep
+   blur + saturation so whatever sits behind the panel tints it. */
+.glass {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.11), rgba(255, 255, 255, 0.04) 55%, rgba(255, 255, 255, 0.02)),
+    linear-gradient(115deg, rgba(233, 61, 130, 0.10), rgba(56, 225, 198, 0.07) 45%, rgba(124, 92, 255, 0.10));
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.22),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+    inset 1px 0 0 rgba(255, 255, 255, 0.05),
+    0 12px 32px rgba(0, 0, 0, 0.35),
+    0 0 44px rgba(124, 92, 255, 0.05);
+  backdrop-filter: blur(22px) saturate(1.8);
+  -webkit-backdrop-filter: blur(22px) saturate(1.8);
+}
+
+.glass-soft {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03)),
+    linear-gradient(115deg, rgba(233, 61, 130, 0.05), rgba(56, 225, 198, 0.04) 50%, rgba(124, 92, 255, 0.05));
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 18px rgba(124, 92, 255, 0.03);
+  backdrop-filter: blur(14px) saturate(1.6);
+  -webkit-backdrop-filter: blur(14px) saturate(1.6);
+}
+
+/* Small glass chips (sidebar buttons, the active nav entry): theme-aware
+   fills so they stay visible on smoked glass and frosty glass alike. */
+.chip {
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.10);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08);
+}
+.chip:hover {
+  background: rgba(255, 255, 255, 0.10);
+}
+.chip-active {
+  background: rgba(255, 255, 255, 0.12);
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.18);
+}
+
+/* ---- Light Liquid Glass ------------------------------------------------
+   The full second theme: bright, frosty, translucent white glass with
+   the same holographic wash, dark text, and deepened cyan/amber so the
+   accents stay legible on a bright surface. Keyed off the data-skin
+   attribute the app sets on its root element (and mirrors on <html>);
+   data-glass kept as an alias for the original two-theme builds. */
+[data-skin="light"],
+[data-glass="light"] {
+  color-scheme: light;
+  --bg: #e2eaf4;
+  --surface: rgba(255, 255, 255, 0.5);
+  --surface-strong: rgba(255, 255, 255, 0.72);
+  --text: #141926;
+  --dim: #4d576e;
+  --border: rgba(20, 28, 48, 0.14);
+  --accent-soft: rgba(233, 61, 130, 0.14);
+  --cyan: #0e8a76;
+  --amber: #a86e00;
+  --chip-bg: rgba(20, 28, 48, 0.07);
+  --accent-deep: #9d2b5e;
+  --accent-fg: #ffffff;
+  --glow-1: #e93d82;
+  --glow-2: #38e1c6;
+  --glow-3: #7c5cff;
+  --glow-4: #4f8ff7;
+  /* The pane lightens only slightly — a deep smoked navy instead of
+     near-black — so the fixed light-on-dark ANSI palette keeps full
+     contrast. */
+  --term-pane: rgba(19, 25, 38, 0.94);
+}
+
+[data-skin="light"] .glass,
+[data-glass="light"] .glass {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.66), rgba(255, 255, 255, 0.38) 55%, rgba(255, 255, 255, 0.30)),
+    linear-gradient(115deg, rgba(233, 61, 130, 0.10), rgba(56, 225, 198, 0.10) 45%, rgba(124, 92, 255, 0.12));
+  border-color: rgba(255, 255, 255, 0.65);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.25),
+    inset 1px 0 0 rgba(255, 255, 255, 0.35),
+    0 12px 32px rgba(31, 45, 77, 0.16),
+    0 0 44px rgba(124, 92, 255, 0.06);
+}
+
+[data-skin="light"] .glass-soft,
+[data-glass="light"] .glass-soft {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.52), rgba(255, 255, 255, 0.30)),
+    linear-gradient(115deg, rgba(233, 61, 130, 0.05), rgba(56, 225, 198, 0.05) 50%, rgba(124, 92, 255, 0.06));
+  border-color: rgba(255, 255, 255, 0.55);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.65),
+    0 0 18px rgba(124, 92, 255, 0.04);
+}
+
+[data-skin="light"] .chip,
+[data-glass="light"] .chip {
+  background: rgba(20, 28, 48, 0.05);
+  border-color: rgba(20, 28, 48, 0.12);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.55);
+}
+[data-skin="light"] .chip:hover,
+[data-glass="light"] .chip:hover {
+  background: rgba(255, 255, 255, 0.75);
+}
+[data-skin="light"] .chip-active,
+[data-glass="light"] .chip-active {
+  background: rgba(255, 255, 255, 0.68);
+  border-color: rgba(20, 28, 48, 0.14);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.75);
+}
+
+/* Inside the terminal pane the glass stays DARK in both themes: the
+   pane scope re-pins the dark-theme values so the input line, key bar,
+   quick commands, link bar and zoom pill all keep their smoked-glass
+   styling and full text contrast on the dark pane. */
+[data-skin="light"] .term-dark-scope,
+[data-glass="light"] .term-dark-scope {
+  --text: #f2f3f7;
+  --dim: #9ba1b0;
+  --border: rgba(255, 255, 255, 0.12);
+  --cyan: #38e1c6;
+  --amber: #ffb224;
+  --chip-bg: rgba(255, 255, 255, 0.06);
+  --accent: #e93d82;
+  --accent-deep: #9d2b5e;
+}
+[data-skin="light"] .term-dark-scope .glass-soft,
+[data-glass="light"] .term-dark-scope .glass-soft {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03)),
+    linear-gradient(115deg, rgba(233, 61, 130, 0.05), rgba(56, 225, 198, 0.04) 50%, rgba(124, 92, 255, 0.05));
+  border-color: rgba(255, 255, 255, 0.10);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 18px rgba(124, 92, 255, 0.03);
+}
+
+/* ---- Midnight OLED -----------------------------------------------------
+   True black chrome, faint smoke-gray glass, terminal green accent
+   (Termius vibe). No iridescent wash, minimal glow — black stays black.
+   The pane is pure black and nearly opaque. */
+[data-skin="midnight"] {
+  color-scheme: dark;
+  --bg: #000000;
+  --surface: rgba(255, 255, 255, 0.04);
+  --surface-strong: rgba(255, 255, 255, 0.07);
+  --text: #e8ecef;
+  --dim: #8a919e;
+  --border: rgba(255, 255, 255, 0.08);
+  --accent: #00e676;
+  --accent-soft: rgba(0, 230, 118, 0.16);
+  --accent-deep: #047857;
+  --accent-fg: #00150a;
+  --cyan: #00e676;
+  --amber: #ffb224;
+  --chip-bg: rgba(255, 255, 255, 0.05);
+  --term-pane: rgba(0, 0, 0, 0.98);
+  --glow-1: #0a2e1c;
+  --glow-2: #111827;
+  --glow-3: #0f1f16;
+  --glow-4: #1a1a1a;
+}
+[data-skin="midnight"] .glass {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0.02) 55%, rgba(255, 255, 255, 0.01)),
+    linear-gradient(115deg, rgba(255, 255, 255, 0.03), rgba(120, 130, 140, 0.04) 50%, rgba(255, 255, 255, 0.02));
+  border-color: rgba(255, 255, 255, 0.09);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.10),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.02),
+    0 12px 32px rgba(0, 0, 0, 0.6),
+    0 0 24px rgba(0, 230, 118, 0.03);
+}
+[data-skin="midnight"] .glass-soft {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02)),
+    linear-gradient(115deg, rgba(255, 255, 255, 0.02), rgba(120, 130, 140, 0.03) 50%, rgba(255, 255, 255, 0.01));
+  border-color: rgba(255, 255, 255, 0.07);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.07);
+}
+[data-skin="midnight"] .term-dark-scope {
+  --accent: #00e676;
+  --cyan: #00e676;
+}
+
+/* ---- Aurora ------------------------------------------------------------
+   Deep violet to teal saturated gradient glass wash. The pane stays a
+   deep violet-black, nearly opaque, so ANSI text stays crisp. */
+[data-skin="aurora"] {
+  color-scheme: dark;
+  --bg: #0d0620;
+  --surface: rgba(255, 255, 255, 0.07);
+  --surface-strong: rgba(255, 255, 255, 0.11);
+  --text: #f3efff;
+  --dim: #b8aed6;
+  --border: rgba(255, 255, 255, 0.14);
+  --accent: #8b7cff;
+  --accent-soft: rgba(139, 124, 255, 0.22);
+  --accent-deep: #6d28d9;
+  --accent-fg: #ffffff;
+  --cyan: #2dd4bf;
+  --amber: #fbbf24;
+  --chip-bg: rgba(255, 255, 255, 0.07);
+  --term-pane: rgba(12, 6, 28, 0.96);
+  --glow-1: #7c3aed;
+  --glow-2: #14b8a6;
+  --glow-3: #8b5cf6;
+  --glow-4: #06b6d4;
+}
+[data-skin="aurora"] .glass {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.12), rgba(255, 255, 255, 0.04) 55%, rgba(255, 255, 255, 0.02)),
+    linear-gradient(115deg, rgba(124, 58, 237, 0.28), rgba(20, 184, 166, 0.20) 55%, rgba(139, 92, 246, 0.24));
+  border-color: rgba(255, 255, 255, 0.18);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.24),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.04),
+    0 12px 32px rgba(0, 0, 0, 0.40),
+    0 0 44px rgba(124, 58, 237, 0.12);
+}
+[data-skin="aurora"] .glass-soft {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.08), rgba(255, 255, 255, 0.03)),
+    linear-gradient(115deg, rgba(124, 58, 237, 0.16), rgba(20, 184, 166, 0.12) 50%, rgba(139, 92, 246, 0.14));
+  border-color: rgba(255, 255, 255, 0.12);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.14),
+    0 0 18px rgba(124, 58, 237, 0.08);
+}
+[data-skin="aurora"] .term-dark-scope {
+  --accent: #8b7cff;
+  --cyan: #2dd4bf;
+}
+
+/* ---- Crimson Vinyl -----------------------------------------------------
+   Dark burgundy and maroon glass with a magenta accent. The pane stays
+   a deep burgundy-black, nearly opaque. */
+[data-skin="crimson"] {
+  color-scheme: dark;
+  --bg: #160308;
+  --surface: rgba(255, 255, 255, 0.05);
+  --surface-strong: rgba(255, 255, 255, 0.09);
+  --text: #f7ecef;
+  --dim: #c09aa6;
+  --border: rgba(255, 255, 255, 0.11);
+  --accent: #f43f7a;
+  --accent-soft: rgba(244, 63, 122, 0.22);
+  --accent-deep: #881337;
+  --accent-fg: #ffffff;
+  --cyan: #fb7185;
+  --amber: #ffb224;
+  --chip-bg: rgba(255, 255, 255, 0.06);
+  --term-pane: rgba(18, 3, 7, 0.96);
+  --glow-1: #9f1239;
+  --glow-2: #e11d48;
+  --glow-3: #7f1d1d;
+  --glow-4: #be123c;
+}
+[data-skin="crimson"] .glass {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.10), rgba(255, 255, 255, 0.03) 55%, rgba(255, 255, 255, 0.02)),
+    linear-gradient(115deg, rgba(159, 18, 57, 0.26), rgba(127, 29, 29, 0.18) 45%, rgba(190, 18, 60, 0.20));
+  border-color: rgba(255, 255, 255, 0.14);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.20),
+    inset 0 -1px 0 rgba(255, 255, 255, 0.03),
+    0 12px 32px rgba(0, 0, 0, 0.45),
+    0 0 44px rgba(159, 18, 57, 0.10);
+}
+[data-skin="crimson"] .glass-soft {
+  background:
+    linear-gradient(145deg, rgba(255, 255, 255, 0.07), rgba(255, 255, 255, 0.03)),
+    linear-gradient(115deg, rgba(159, 18, 57, 0.14), rgba(127, 29, 29, 0.10) 50%, rgba(190, 18, 60, 0.12));
+  border-color: rgba(255, 255, 255, 0.10);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.12),
+    0 0 18px rgba(159, 18, 57, 0.06);
+}
+[data-skin="crimson"] .term-dark-scope {
+  --accent: #f43f7a;
+  --cyan: #fb7185;
+}
+
+.thin-scroll {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.22) transparent;
+}
+.thin-scroll::-webkit-scrollbar {
+  width: 5px;
+  height: 5px;
+}
+.thin-scroll::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.22);
+  border-radius: 99px;
+}
+
+/* Terminal pane scrolling: the native scrollbar is hidden because phone
+   webviews only show overlay scrollbars mid-scroll (or never), which
+   left the pane with no visible way to move through its history. The
+   pane instead carries a custom, always-visible scrollbar rail on its
+   right edge (rendered in App.tsx): a 14px track with a draggable thumb
+   whose size and position mirror the pane's own scroll state, so the
+   tmux scrollback — previous messages and output — can be dragged
+   through on touch and mouse alike. This scrolls the reading pane's
+   content, not the page. */
+.term-scroll {
+  scrollbar-width: none;
+  -webkit-overflow-scrolling: touch;
+  overscroll-behavior: contain;
+}
+.term-scroll::-webkit-scrollbar {
+  display: none;
+  width: 0;
+  height: 0;
+}
+
+.term-scroll a {
+  cursor: pointer;
+  -webkit-tap-highlight-color: rgba(233, 61, 130, 0.25);
+}
+
+.font-term {
+  font-family: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo,
+    Consolas, "Liberation Mono", monospace;
+}
+
+@keyframes term-blink {
+  0%,
+  49% {
+    opacity: 1;
+  }
+  50%,
+  100% {
+    opacity: 0;
+  }
+}
+
+.term-cursor {
+  animation: term-blink 1.06s step-end infinite;
+}
+
+.term-cursor-cell {
+  animation: term-blink 1.06s step-end infinite;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .term-cursor,
+  .term-cursor-cell {
+    animation: none;
+  }
+}

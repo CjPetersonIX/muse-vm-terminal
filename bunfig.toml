@@ -1,0 +1,12 @@
+[install]
+linker = "hoisted"
+auto = "disable"
+saveTextLockfile = true
+
+# Each TypeScript web artifact gets its OWN bun install cache. The shared
+# ~/.bun/install/cache/ is owned by the host daemon; if an install ran
+# under a different uid, the shared cache would acquire entries the daemon
+# can't overwrite later (ENOTEMPTY when bun renames the .tmp slot).
+[install.cache]
+dir = ".bun-cache"
+disable = false

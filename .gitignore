@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+.bun-cache/
+
+# Build output
+dist/
+.space-build/
+.space-build-cvm/
+client/dist/
+client/dist-cvm/
+server/dist/
+
+# TypeScript build info
+*.tsbuildinfo
+.tsbuildinfo*
+
+# Local data and session state (never commit terminal history or scrollback)
+app.db
+app.db-shm
+app.db-wal
+*.log
+logs/
+
+# Environment and credentials
+.env
+.env.*
+!.env.example
+
+# Artifact tooling internals
+.harness/
+audits/
+space_data/
+
+# OS / editor
+.DS_Store
+*.swp
