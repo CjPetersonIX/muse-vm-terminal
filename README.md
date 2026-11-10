@@ -19,6 +19,7 @@ Muse agents live in a Linux VM, but the chat surface is not a shell. This Space 
 7. Full special-keys strip: esc, tab, all four arrows, ^C ^D ^Z ^L, backspace, enter, plus a live-keys mode that sends every keystroke straight into the PTY.
 8. Number row (1 to 0) for one-tap answers to multiple-choice prompts inside terminal apps.
 9. Keyboard-fitted Mobile layout: the terminal flexes to the visible viewport above the phone keyboard; nothing important is ever covered.
+10. CLI routing (see `scripts/cli-routes.sh`): every installed agent CLI is callable by its plain name, even when its real binary installed as `<name>-real` or landed in a directory the login shell never puts on PATH.
 
 ## How it works
 
@@ -37,7 +38,30 @@ The Space is a fullstack Muse artifact. Its server actions bridge the web client
 
 1. Copy the source into a new fullstack Space in your Muse workspace.
 2. Point the session name in the server actions at your tmux session, or let it create the default.
-3. Open the Space, pick Desktop or Mobile, and type.
+3. Run `scripts/cli-routes.sh install` once on the VM so agent CLIs route by their plain names (next section).
+4. Open the Space, pick Desktop or Mobile, and type.
+
+## CLI routing: plain names just work
+
+The wall: agent CLIs rarely install under exactly the name you type. The real binary lands as `<name>-real` behind a wrapper somebody has to write by hand, or in a directory the login shell never puts on PATH (`~/.bun/bin`, `~/.cargo/bin`, an npm prefix, `~/go/bin`). The tool is installed and works, but typing its plain name in the terminal answers "command not found". Anyone who does not already know the fix hits that wall and gives up.
+
+`scripts/cli-routes.sh` removes the wall generically, for any CLI:
+
+1. It creates a shim directory (`~/.local/share/muse-vm-terminal/shims`) and puts it first on PATH through marked blocks appended to `~/.bashrc` and `~/.profile`, so every new login shell, including the terminal's tmux session, sees it.
+2. For every tool it finds, it writes a shim named by the plain name that execs the real binary. A `<name>-real` binary anywhere in the searched directories is routed automatically, with no configuration. A binary found off PATH gets a shim pointing at its absolute path.
+3. A small registry (`scripts/cli-routes.conf`, example included) lists tools that need flags prepended to every call. The example routes `agy` with `--dangerously-skip-permissions`, the flag its agent mode needs to run unattended; the registry also names the tools `doctor` always reports on (`codex`, `claude`, `gemini`, `opencode`, `openclaw` ship in the example). Flags are your own choice for your own machine; edit or empty the registry freely.
+4. An existing hand-made wrapper under a plain name is left alone when no flags are configured for that tool. The installer never fights a route that already works.
+
+Day to day:
+
+1. `scripts/cli-routes.sh install`: one time setup, PATH blocks plus shims. Idempotent; run it again any time.
+2. `scripts/cli-routes.sh refresh`: regenerate shims after installing a new CLI, so its plain name routes immediately.
+3. `scripts/cli-routes.sh doctor`: one line per known name showing exactly how it resolves (shim target, direct path, off PATH, or not installed).
+
+Notes:
+
+1. Already-running tmux sessions keep the PATH they started with. Restart the terminal session (or open a new login shell) once after install so the session picks up the shim directory.
+2. Undo is delete-and-forget: remove the shim directory and the two marked `cli-routes` blocks in `~/.bashrc` and `~/.profile`.
 
 ## Security notes
 

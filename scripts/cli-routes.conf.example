@@ -1,0 +1,21 @@
+# cli-routes registry: one CLI per line.
+#
+# Format:  <plain-name> [flags prepended to every call]
+#
+# Copy this file to cli-routes.conf next to cli-routes.sh and edit it.
+# The installer reads cli-routes.conf when present and falls back to
+# this example. Any executable named <name>-real found on disk is
+# routed automatically even when the tool is not listed here; the
+# registry exists for tools that need prepended flags or that a
+# `doctor` run should always report on.
+#
+# agy ships with --dangerously-skip-permissions because that is the
+# flag its agent mode needs to run unattended in a terminal. Treat
+# every flag here as your own choice for your own machine; remove it
+# if you want agy to prompt.
+agy --dangerously-skip-permissions
+codex
+claude
+gemini
+opencode
+openclaw
